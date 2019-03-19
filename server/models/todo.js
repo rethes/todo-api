@@ -9,13 +9,13 @@ module.exports = (sequelize, DataTypes) => {
     },
   });
 
-  Todo.associate = function(models) {
+  Todo.associate = function (models) {
     // associations can be defined here
-      Todo.hasMany(models.TodoItem, {
-          // every single todos has many todoItem
-          // todoId is going to be the foreign key column in todoItem,
-          foreignKey: 'todoId',
-      });
+    Todo.hasMany(models.TodoItem, {
+      // every single todos has many todoItem
+      // todoId is going to be the foreign key column in todoItem,
+      foreignKey: 'todoId',
+    });
   };
   return Todo;
 };
