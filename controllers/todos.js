@@ -1,4 +1,4 @@
-const models = require('../server/models');
+const models = require('../server/models/index');
 
 module.exports = {
 
@@ -15,9 +15,68 @@ module.exports = {
       .then(todos => res.status(200).send({
         // res.send() is used to send back a response to the client,
         success: 'true',
-        message: 'todos retrieved successfully',
+        message: 'Todos retrieved successfully',
         todos,
       }));
+  },
+
+  /**
+   * @function getPaginatedTodos
+   * @param {Object} req
+   * @param {Object} res
+   * @return Status Code & Object
+   */
+  getPaginatedTodos(req, res) {
+    // number of records per page
+    let limit = 10;
+    let offset = 0;
+
+    models.Todo.findAndCountAll()
+      .then((data) => {
+        // page
+        let page = req.params.page;
+        // page number
+        const pagesCount = data.count;
+        let pages = Math.ceil(pagesCount / limit);
+        offset = limit * (page - 1);
+
+        const newPage = parseInt(page, 10);
+
+        const currentPage = req.path;
+        const nextPage = (newPage + 1);
+
+        models.Todo.findAll({
+          limit: limit,
+          offset: offset,
+          $sort: {id: 1}
+        })
+          .then((todos) => {
+            if (todos.length === 0) {
+              return res.status(200).send({
+                success: 'true',
+                message: 'No todos',
+              });
+            }
+            res.status(200).json({
+              "data": todos,
+              "meta": {
+                "firstPage": "http://localhost:8000/api/v1/todos/1",
+                "currentPage": "http://localhost:8000" + currentPage,
+                "nextPage": "http://localhost:8000/api/v1/todos/" + nextPage,
+                "page": newPage,
+                "pagesCount": pagesCount,
+                "totalCount": pages
+              },
+            });
+          });
+      })
+      .catch(() => {
+        res.status(400).send({
+          success: "false",
+          message: "Bad Request"
+        });
+      });
+
   },
 
   /**
