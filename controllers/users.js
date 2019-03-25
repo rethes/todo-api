@@ -1,9 +1,15 @@
+//third-party libraries
+const multer = require('multer');
+const cloudinary = require('cloudinary').v2;
+
 //models
 const User = require('../server/models/index').User;
 
-// helper functions
+//helper functions
 const generateToken = require('../helpers/generateToken');
 const generateHash = require('../helpers/hashPassword');
+const localStorage = require('../helpers/uploads');
+
 
 module.exports = {
   createUser(req, res) {
@@ -42,8 +48,8 @@ module.exports = {
         .then(() => {
           return res.status(201).send(
             {
-              "success": "true",
-              "message": "User created successfully",
+              status: "success",
+              message: "User successfully created",
               user: {
                 "email": user.email,
                 "imageUrl": user.imageUrl,
@@ -55,7 +61,7 @@ module.exports = {
   },
 
   loginUser(req, res) {
-    const user = User.findOne({
+    User.findOne({
       where: {
         email: req.body.email
       }
@@ -83,8 +89,8 @@ module.exports = {
       attributes: ['id', 'email', 'imageUrl', 'createdAt', 'updatedAt'],
     })
       .then(users => res.status(200).send({
-        success: 'true',
-        message: 'success, the users',
+        message: "Users fetched successfully",
+        status: "success",
         users
       }));
   },
@@ -143,4 +149,58 @@ module.exports = {
       });
   },
 
+  updateImage(req, res) {
+
+    User.findById(req.params.id)
+      .then(async (user) => {
+        if (!user) {
+          return res.status(404).send({
+            status: 'error',
+            message: 'The user does not exist',
+          });
+        }
+          //store file locally
+          const storage = localStorage.storage;
+          const upload = multer({storage}).single('name');
+
+          upload(req, res, (err) => {
+            if (err) {
+              return res.send(err)
+            }
+            //send file to cloudinary
+            cloudinary.config({
+              cloud_name: process.env.CLOUDINARY_NAME,
+              api_key: process.env.CLOUDINARY_API_KEY,
+              api_secret: process.env.CLOUDINARY_API_SECRET
+            });
+
+            const path = req.file.path;
+            const uniqueFilename = new Date().toISOString();
+
+            cloudinary.uploader.upload(path, {public_id: `todo-app/${uniqueFilename}`, tags: `todo-app`},
+              async (err, image) => {
+
+                if (err) {
+                  return res.send(err.message);
+                }
+                // remove file from server
+                const fs = require('fs');
+                fs.unlinkSync(path);
+
+                // return image details and update user
+                const imageUrl = await image.secure_url;
+
+                user.update({
+                  imageUrl: imageUrl || user.imageUrl,
+                });
+                return  res.status(200).send({"status": "success",
+                  "message": "User image successfully updated",
+                  user
+                });
+              }
+            );
+          });
+
+      });
+  },
 };
