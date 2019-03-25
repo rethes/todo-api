@@ -141,7 +141,6 @@ module.exports = {
           return res.status(201).send(
             {
               "success": "true",
-              "message": {danger: req.flash('danger')},
               todo
             });
         });
