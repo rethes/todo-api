@@ -34,27 +34,28 @@ passport.use(new JWTStrategy({
 //LOCAL STRATEGY
 passport.use(new LocalStrategy({
     usernameField: 'email',
-    // passwordField: 'password'
   },
   (email, password, cb) => {
     //Find the user given the email
-    //user found check if the password is okay
-    return User.findOne({email})
+    return User.findOne({
+      where: {
+        email: email,
+      }})
       .then(user => {
         //handle if user does not exist
         if (!user) {
           return cb(null, false, {message: 'Incorrect email or password.'});
         }
-        //hash password
-        const generateHash = (password) => {
-          return bcrypt.hashSync(password, bcrypt.genSaltSync(10), null);
-        };
-        const hashPassword = generateHash(user.password);
 
-        //check hash password
+        //the existing password
+        const hashPassword = user.password;
+
+        //check hash password with the given password
         const validPassword = (newPassword) => {
           return bcrypt.compareSync(newPassword, hashPassword);
         };
+
+        // check if the passwords match
         const match = validPassword(password);
 
         if (!match) {

@@ -25,6 +25,8 @@ router.get('/api/v1/users', UserController.getUsers);
 
 router.get('/api/v1/users/:page', UserController.getPaginatedUsers);
 
+router.put('/api/v1/users/:id', passport.authenticate('jwt', {session: false}), UserController.updateImage);
+
 router.post('/api/v1/users/login', passport.authenticate('local', {session: false}), UserController.loginUser);
 
 module.exports = router;

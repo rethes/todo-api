@@ -1,6 +1,18 @@
 # todo-api
 A simple todo app API 
 
+## Features:
+
+### For TODOs
+- CRUD todo details
+- Get a list of paginated items
+
+### For Users
+- Register a user with social auth and jwt tokens using PassportJs
+- Login a user
+- Get a list of paginated users
+- Upload user images using cloudinary
+
 ### Quick Set-up
 
 Ensure you have the following installed locally:
