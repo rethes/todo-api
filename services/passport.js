@@ -5,7 +5,7 @@ const ExtractJWT = passportJWT.ExtractJwt;
 const LocalStrategy = require('passport-local').Strategy;
 const bcrypt = require('bcrypt');
 
-const User = require('../server/models').User;
+const User = require('../server/models').Users;
 const JWT_SECRET = process.env.JWT_SECRET;
 
 
@@ -47,12 +47,9 @@ passport.use(new LocalStrategy({
           return cb(null, false, {message: 'Incorrect email or password.'});
         }
 
-        //the existing password
-        const hashPassword = user.password;
-
-        //check hash password with the given password
+        //check hash password against given password
         const validPassword = (newPassword) => {
-          return bcrypt.compareSync(newPassword, hashPassword);
+          return bcrypt.compareSync(newPassword, user.password);
         };
 
         // check if the passwords match
