@@ -7,8 +7,10 @@
   "author": "Mutua Esther",
   "license": "ISC",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node_modules/.bin/nodemon app.js --exec babel-node --"
+    "start": "node_modules/.bin/nodemon app.js --exec babel-node --",
+    "seed": "node_modules/.bin/sequelize db:seed:undo:all && node_modules/.bin/sequelize db:seed --seed categories && node_modules/.bin/sequelize db:seed --seed users &&node_modules/.bin/sequelize db:seed --seed todos",
+    "migrate": "node_modules/.bin/sequelize db:migrate:undo:all && node_modules/.bin/sequelize db:migrate",
+    "migrate-seed": "npm run migrate && npm run seed"
   },
   "dependencies": {
     "babel-cli": "^6.26.0",

@@ -1,0 +1,39 @@
+{
+  "todos": [
+    {
+      "id": "cjfkubrlv0001tgxs3mre",
+      "description": "Having cereal for breakfast",
+      "categoryId": 1,
+      "createdAt": "2019-03-05T21:31:07.002Z",
+      "updatedAt": "2019-03-05T21:31:07.002Z"
+    },
+    {
+      "id": "cjfkubrlv0001tgxs3mrf",
+      "description": "Meeting at Brunch",
+      "categoryId": 2,
+      "createdAt": "2019-03-05T22:09:48.595Z",
+      "updatedAt": "2019-03-05T22:09:48.595Z"
+    },
+    {
+      "id": "cjfkubrlv0001tgxs3mrg",
+      "description": "lunch workout",
+      "categoryId": 3,
+      "createdAt": "2019-03-05T21:19:59.545Z",
+      "updatedAt": "2019-03-19T16:30:09.685Z"
+    },
+    {
+      "id": "cjfkubrlv0001tgxs3mrh",
+      "description": "Ovacado toast for tea",
+      "categoryId": 4,
+      "createdAt": "2019-03-22T19:54:16.277Z",
+      "updatedAt": "2019-03-22T19:54:16.277Z"
+    },
+    {
+      "id": "cjfkubrlv0001tgxs3mrj",
+      "description": "Dinner at 9 PM",
+      "categoryId": 5,
+      "createdAt": "2019-03-22T19:56:16.127Z",
+      "updatedAt": "2019-03-22T19:56:16.127Z"
+    }
+  ]
+}

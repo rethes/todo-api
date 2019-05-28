@@ -3,7 +3,7 @@ const multer = require('multer');
 const cloudinary = require('cloudinary').v2;
 
 //models
-const User = require('../server/models/index').User;
+const User = require('../server/models/index').Users;
 
 //helper functions
 const generateToken = require('../helpers/generateToken');
@@ -84,7 +84,7 @@ module.exports = {
 
   },
 
-  getUsers(req, res) {
+  getAllUsers(req, res) {
     User.findAll({
       attributes: ['id', 'email', 'imageUrl', 'createdAt', 'updatedAt'],
     })
@@ -93,6 +93,23 @@ module.exports = {
         status: "success",
         users
       }));
+  },
+
+  getUser(req, res) {
+    User.findById(req.params.id)
+      .then((user) => {
+        if (user) {
+          return res.status(200).send({
+            success: 'true',
+            message: 'User retrieved successfully',
+            data: { user },
+          });
+        }
+        return res.status(404).send({
+          success: 'false',
+          message: 'user does not exist',
+        });
+      });
   },
 
   getPaginatedUsers(req, res) {
@@ -105,8 +122,8 @@ module.exports = {
         // page
         let page = req.params.page;
         // page number
-        const pagesCount = data.count;
-        let pages = Math.ceil(pagesCount / limit);
+        const totalCount = data.count;
+        let pages = Math.ceil(totalCount / limit);
         offset = limit * (page - 1);
 
         const newPage = parseInt(page, 10);
@@ -133,10 +150,10 @@ module.exports = {
               "meta": {
                 "firstPage": "http://localhost:8000/api/v1/users/1",
                 "currentPage": "http://localhost:8000" + currentPage,
-                "nextPage": "http://localhost:8000/api/v1/users/" + nextPage,
+                "nextPage": (pages < 2) ? " " : "http://localhost:8000/api/v1/users/" + nextPage,
                 "page": newPage,
                 "pagesCount": pages,
-                "totalCount": pagesCount,
+                "totalCount": totalCount,
               },
             });
           });
