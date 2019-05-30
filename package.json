@@ -2,12 +2,14 @@
   "name": "todo-api",
   "version": "1.0.0",
   "description": "A simple todo app API",
-  "main": "index.js",
+  "main": "server.js",
   "repository": "https://github.com/rethes/todo-api.git",
   "author": "Mutua Esther",
   "license": "ISC",
   "scripts": {
-    "start": "node_modules/.bin/nodemon app.js --exec babel-node --",
+    "start": "node_modules/.bin/nodemon ./bin/www ",
+    "pretest": "NODE_ENV=test node_modules/.bin/sequelize db:migrate:undo:all && node_modules/.bin/sequelize db:seed:undo:all && NODE_ENV=test node_modules/.bin/sequelize db:migrate && NODE_ENV=test npm run seed",
+    "test": "node_modules/.bin/ jest --detectOpenHandles --runInBand",
     "seed": "node_modules/.bin/sequelize db:seed:undo:all && node_modules/.bin/sequelize db:seed --seed categories && node_modules/.bin/sequelize db:seed --seed users &&node_modules/.bin/sequelize db:seed --seed todos",
     "migrate": "node_modules/.bin/sequelize db:migrate:undo:all && node_modules/.bin/sequelize db:migrate",
     "migrate-seed": "npm run migrate && npm run seed"
@@ -28,10 +30,15 @@
     "passport-local": "^1.0.0",
     "pg": "^7.8.1",
     "pg-hstore": "^2.3.2",
-    "sequelize": "^4.43.0",
+    "sequelize": "^5.8.6",
     "sequelize-cli": "^5.4.0"
   },
   "devDependencies": {
-    "nodemon": "^1.18.10"
+    "eslint": "^5.16.0",
+    "eslint-plugin-jest": "^22.6.4",
+    "jest": "^24.8.0",
+    "jest-cli": "^24.8.0",
+    "nodemon": "^1.18.10",
+    "supertest": "^4.0.2"
   }
 }

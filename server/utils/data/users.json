@@ -1,6 +1,14 @@
 {
   "users": [
     {
+      "id": "cjw9cen7d00004uvf70x7hhbv",
+      "email": "bricer.twenty@gmail.com",
+      "imageUrl": "https://avatars.slack-edge.com/2018-01-31/308111298950_b15a779680c4d2bb093c_48.png",
+      "password": "$2b$10$MJwtHGVk388oqTK6ngiPGu2JLi5h1ptER2nvMFls2VSWM.SVMT85e",
+      "createdAt": "2019-03-08T14:54:51.710",
+      "updatedAt": "2019-03-08T14:54:51.710"
+    },
+    {
       "id": "cjl6efcka00004tny9ilz7b61",
       "email": "sean.muthoga@gmail.com",
       "imageUrl": "https://avatars.slack-edge.com/2018-01-31/308111298950_b15a779680c4d2bb093c_48.png",

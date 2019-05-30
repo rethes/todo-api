@@ -47,7 +47,7 @@ module.exports = {
       .then((todoFound) => {
       if (todoFound) {
         return res.status(403).send({
-          success: 'true',
+          status: 'error',
           message: 'A todo with that description exist already',
         });
       }
@@ -63,7 +63,8 @@ module.exports = {
           // .then function runs when the object has been successfully added to the database
           return res.status(201).send(
             {
-              "success": "true",
+              status: "success",
+              message: 'The todo created successfully',
               data: { todo }
             });
         });
@@ -82,14 +83,14 @@ module.exports = {
       .then((todo) => {
         if (todo) {
           return res.status(200).send({
-            success: 'true',
+            status: 'success',
             message: 'Todo retrieved successfully',
             data: { todo },
           });
         }
         return res.status(404).send({
-          success: 'false',
-          message: 'todo does not exist',
+          status: 'success',
+          message: 'The todo does not exist',
         });
       });
   },
@@ -135,7 +136,7 @@ module.exports = {
           .then((todos) => {
             if (todos.length === 0) {
               return res.status(200).send({
-                success: 'true',
+                status: 'success',
                 message: 'No todos',
               });
             }
@@ -155,7 +156,7 @@ module.exports = {
       })
       .catch(() => {
         res.status(400).send({
-          success: "false",
+          status: "success",
           message: "Bad Request"
         });
       });
@@ -179,13 +180,13 @@ module.exports = {
           });
 
           return res.status(200).send({
-            success: 'true',
+           status: 'success',
             message: 'todo updated successfully',
             data: { todo }
           });
         }
         return res.status(404).send({
-          success: 'false',
+         status: 'error',
           message: 'todo does not exist',
         });
       });
@@ -204,11 +205,11 @@ module.exports = {
         if (todo) {
           todo.destroy();
           return res.status(204).send({
-            success: 'true',
+           status: 'success'
           });
         }
         return res.status(404).send({
-          success: 'false',
+         status: 'error',
           message: 'todo does not exist',
         });
       });
