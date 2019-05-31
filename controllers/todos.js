@@ -8,20 +8,28 @@ module.exports = {
    * @param {Object} res
    * @return Status Code & Object with array
    */
-  getAllTodos(req, res) {
+  getAllTodos: async(req, res) => {
     // req object contains information about our request
     // response object contains information about the response and methods we can use to send information back to the client.
-    Todo.findAll({
+    const todos = await Todo.findAll({
       where: {
         categoryId: req.params.id,
       },
-    })
-      .then(todos => res.status(200).send({
-        // res.send() is used to send back a response to the client,
-        success: 'true',
-        message: 'Todos retrieved successfully',
-        data: { todos } ,
-      }));
+    });
+
+    if(todos.length === 0){
+      return res.status(404).send({
+        status: "error",
+        message: "Todo not found",
+      });
+    }
+
+    return res.status(200).send({
+      // res.send() is used to send back a response to the client,
+      status: 'success',
+      message: 'Todos retrieved successfully',
+      data: { todos } ,
+    });
   },
 
   /**
@@ -79,8 +87,9 @@ module.exports = {
    */
   getTodo(req, res) {
 
-    Todo.findById(req.params.id)
-      .then((todo) => {
+    Todo.findOne({
+      where: { id: req.params.id }
+    }).then((todo) => {
         if (todo) {
           return res.status(200).send({
             status: 'success',
@@ -171,7 +180,9 @@ module.exports = {
    */
   updateTodo(req, res) {
 
-    Todo.findById(req.params.id)
+    Todo.findOne({
+      where: { id: req.params.id }
+    })
       .then( async (todo) => {
         if (todo) {
 
@@ -198,21 +209,21 @@ module.exports = {
    * @param {Object} res
    * @return Status Code
    */
-  deleteTodo(req, res) {
+  deleteTodo: async(req, res) => {
 
-    Todo.findById(req.params.id)
-      .then((todo) => {
-        if (todo) {
-          todo.destroy();
-          return res.status(204).send({
-           status: 'success'
-          });
-        }
-        return res.status(404).send({
-         status: 'error',
-          message: 'todo does not exist',
-        });
+    const todo = await Todo.findOne({
+        where: { id: req.params.id }
+    });
+
+    if (todo) {
+      todo.destroy();
+      return res.status(200).send({
+        status: 'success', message: 'Todo deleted successfully',
       });
+    }
+    return res.status(404).send({
+      status: 'error', message: 'The todo does not exist',
+    });
   },
 
 };

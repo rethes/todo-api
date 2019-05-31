@@ -30,7 +30,7 @@ module.exports = {
     }).then((userFound) => {
       if (userFound) {
         return res.status(403).send({
-         status: 'error',
+          status: 'error',
           message: 'A user with that email exist already',
         });
       }
@@ -96,20 +96,22 @@ module.exports = {
   },
 
   getUser(req, res) {
-    User.findById(req.params.id)
-      .then((user) => {
-        if (user) {
-          return res.status(200).send({
-           status: 'success',
-            message: 'User retrieved successfully',
-            data: { user },
-          });
-        }
-        return res.status(404).send({
-         status: 'error',
-          message: 'user does not exist',
+    User.findOne({
+      where: {id: req.params.id},
+      attributes: ['id', 'email', 'imageUrl'],
+    }).then((user) => {
+      if (user) {
+        return res.status(200).send({
+          status: 'success',
+          message: 'User retrieved successfully',
+          data: {user},
         });
+      }
+      return res.status(404).send({
+        status: 'error',
+        message: 'user does not exist',
       });
+    });
   },
 
   getPaginatedUsers(req, res) {
@@ -140,7 +142,7 @@ module.exports = {
           .then((users) => {
             if (users.length === 0) {
               return res.status(200).send({
-               status: 'success',
+                status: 'success',
                 message: 'No users',
               });
             }
@@ -164,11 +166,14 @@ module.exports = {
           message: "Bad Request"
         });
       });
-  },
+  }
+  ,
 
   updateImage(req, res) {
 
-    User.findById(req.params.id)
+    User.findOne({
+      where: {id: req.params.id}
+    })
       .then(async (user) => {
         if (!user) {
           return res.status(404).send({
@@ -176,49 +181,50 @@ module.exports = {
             message: 'The user does not exist',
           });
         }
-          //store file locally
-          const storage = localStorage.storage;
-          const upload = multer({storage}).single('name');
+        //store file locally
+        const storage = localStorage.storage;
+        const upload = multer({storage}).single('name');
 
-          upload(req, res, (err) => {
-            if (err) {
-              return res.send(err)
-            }
-            //send file to cloudinary
-            cloudinary.config({
-              cloud_name: process.env.CLOUDINARY_NAME,
-              api_key: process.env.CLOUDINARY_API_KEY,
-              api_secret: process.env.CLOUDINARY_API_SECRET
-            });
-
-            const path = req.file.path;
-            const uniqueFilename = new Date().toISOString();
-
-            cloudinary.uploader.upload(path, {public_id: `todo-app/${uniqueFilename}`, tags: `todo-app`},
-              async (err, image) => {
-
-                if (err) {
-                  return res.send(err.message);
-                }
-                // remove file from server
-                const fs = require('fs');
-                fs.unlinkSync(path);
-
-                // return image details and update user
-                const imageUrl = await image.secure_url;
-
-                user.update({
-                  imageUrl: imageUrl || user.imageUrl,
-                });
-                return  res.status(200).send({
-                  "status": "success",
-                  "message": "User image successfully updated",
-                  user
-                });
-              }
-            );
+        upload(req, res, (err) => {
+          if (err) {
+            return res.send(err)
+          }
+          //send file to cloudinary
+          cloudinary.config({
+            cloud_name: process.env.CLOUDINARY_NAME,
+            api_key: process.env.CLOUDINARY_API_KEY,
+            api_secret: process.env.CLOUDINARY_API_SECRET
           });
 
+          const path = req.file.path;
+          const uniqueFilename = new Date().toISOString();
+
+          cloudinary.uploader.upload(path, {public_id: `todo-app/${uniqueFilename}`, tags: `todo-app`},
+            async (err, image) => {
+
+              if (err) {
+                return res.send(err.message);
+              }
+              // remove file from server
+              const fs = require('fs');
+              fs.unlinkSync(path);
+
+              // return image details and update user
+              const imageUrl = await image.secure_url;
+
+              user.update({
+                imageUrl: imageUrl || user.imageUrl,
+              });
+              return res.status(200).send({
+                "status": "success",
+                "message": "User image successfully updated",
+                user
+              });
+            }
+          );
+        });
+
       });
-  },
+  }
+  ,
 };
