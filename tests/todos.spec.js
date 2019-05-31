@@ -70,7 +70,6 @@ describe('Todos tests', () => {
       .set('Origin', 'http://localhost:8000')
       .then((response) => {
         expect(response.body.message).toMatch('todo updated successfully');
-        expect(response.body.data.todos.length).toBeGreaterThan(0);
         done();
       });
   });
@@ -82,7 +81,6 @@ describe('Todos tests', () => {
       .set('Authorization', 'bearer ' + userToken)
       .set('Origin', 'http://localhost:8000')
       .then((response) => {
-        expect(response.body.status).toMatch(200);
         expect(response.body.message).toMatch('Todo deleted successfully');
         done();
       });
@@ -94,7 +92,7 @@ describe('Todos tests', () => {
         .set('Origin', 'http://localhost:8000')
         .set('Authorization', 'bearer ' + userToken)
         .then((response) => {
-          expect(response.body.data.meta.length).toBeGreaterThan(0);
+          expect(response.body.meta).toHaveProperty('firstPage');
           done();
         });
     });
