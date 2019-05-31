@@ -1,17 +1,20 @@
 # todo-api
 A simple todo app API 
 
-## Features:
+### Features
 
-### For TODOs
-- CRUD todo details
-- Get a list of paginated items
+#### Categories
+1. Get all categories
 
-### For Users
-- Register a user with social auth and jwt tokens using PassportJs
-- Login a user
-- Get a list of paginated users
-- Upload user images using cloudinary
+#### Todo
+1. CRUD Todo
+2. Pagination
+
+#### Users
+1. Jwt Authentication with PassportJs
+2. Create, View and Update user details 
+3. Profile upload with Cloudinary
+4. Pagination
 
 ### Quick Set-up
 
@@ -57,21 +60,6 @@ npm start
 ```
 
 Navigate to the port and test the endpoints on postman
-
-### Features
-
-#### Categories
-1. Get all categories
-
-#### Todo
-1. CRUD Todo
-2. Pagination
-
-#### Users
-1. Jwt Authentication with PassportJs
-2. Create, View and Update user details 
-3. Profile upload with Cloudinary
-4. Pagination
 
 ### Screenshots
 <img width="1421" alt="Screenshot 2019-03-22 at 22 56 57" src="https://user-images.githubusercontent.com/27001310/54849606-d8d44800-4cf5-11e9-93c3-469bae3fdc02.png">
