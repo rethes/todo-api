@@ -30,7 +30,7 @@ module.exports = {
     }).then((userFound) => {
       if (userFound) {
         return res.status(403).send({
-          success: 'false',
+         status: 'error',
           message: 'A user with that email exist already',
         });
       }
@@ -86,7 +86,7 @@ module.exports = {
 
   getAllUsers(req, res) {
     User.findAll({
-      attributes: ['id', 'email', 'imageUrl', 'createdAt', 'updatedAt'],
+      attributes: ['id', 'email', 'imageUrl'],
     })
       .then(users => res.status(200).send({
         message: "Users fetched successfully",
@@ -100,13 +100,13 @@ module.exports = {
       .then((user) => {
         if (user) {
           return res.status(200).send({
-            success: 'true',
+           status: 'success',
             message: 'User retrieved successfully',
             data: { user },
           });
         }
         return res.status(404).send({
-          success: 'false',
+         status: 'error',
           message: 'user does not exist',
         });
       });
@@ -140,7 +140,7 @@ module.exports = {
           .then((users) => {
             if (users.length === 0) {
               return res.status(200).send({
-                success: 'true',
+               status: 'success',
                 message: 'No users',
               });
             }
@@ -210,7 +210,8 @@ module.exports = {
                 user.update({
                   imageUrl: imageUrl || user.imageUrl,
                 });
-                return  res.status(200).send({"status": "success",
+                return  res.status(200).send({
+                  "status": "success",
                   "message": "User image successfully updated",
                   user
                 });
