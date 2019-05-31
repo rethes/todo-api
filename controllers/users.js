@@ -37,22 +37,21 @@ module.exports = {
 
       const hashedPassword = generateHash.hash(password);
       //create a new user
-      const user = {
+      const newUser = {
         email: req.body.email,
         imageUrl: req.body.imageUrl,
         password: hashedPassword,
       };
-      const userToken = generateToken.token(user);
+      const userToken = generateToken.token(newUser);
 
-      User.create(user)
+      User.create(newUser)
         .then(() => {
           return res.status(201).send(
             {
               status: "success",
               message: "User successfully created",
               user: {
-                "email": user.email,
-                "imageUrl": user.imageUrl,
+                email: newUser.email,
               },
               userToken
             });
@@ -166,8 +165,7 @@ module.exports = {
           message: "Bad Request"
         });
       });
-  }
-  ,
+  },
 
   updateImage(req, res) {
 
@@ -196,8 +194,15 @@ module.exports = {
             api_secret: process.env.CLOUDINARY_API_SECRET
           });
 
+          if(!req.file){
+            return res.status(404).send({
+              status: "error",
+              message: "No image selected",
+            });
+          }
           const path = req.file.path;
           const uniqueFilename = new Date().toISOString();
+
 
           cloudinary.uploader.upload(path, {public_id: `todo-app/${uniqueFilename}`, tags: `todo-app`},
             async (err, image) => {
@@ -218,13 +223,16 @@ module.exports = {
               return res.status(200).send({
                 "status": "success",
                 "message": "User image successfully updated",
-                user
+                "user": {
+                  "id": user.id,
+                  "email": user.email,
+                  "imageUrl": user.imageUrl,
+                }
               });
             }
           );
         });
 
       });
-  }
-  ,
+  },
 };

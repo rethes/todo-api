@@ -31,10 +31,10 @@ router.get('/api/v1/users', passport.authenticate('jwt', {session: false}), User
 
 router.get('/api/v1/users/:id', passport.authenticate('jwt', {session: false}), UserController.getUser);
 
-router.get('/api/v1/users/:page', passport.authenticate('jwt', {session: false}), UserController.getPaginatedUsers);
+router.get('/api/v1/users/page/:page', passport.authenticate('jwt', {session: false}), UserController.getPaginatedUsers);
 
 router.put('/api/v1/users/:id', passport.authenticate('jwt', {session: false}), UserController.updateImage);
 
-router.post('/api/v1/users/login', UserController.loginUser);
+router.post('/api/v1/users/login', passport.authenticate('local', {session: false}), UserController.loginUser);
 
 module.exports = router;
