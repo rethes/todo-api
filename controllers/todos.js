@@ -54,7 +54,7 @@ module.exports = {
     })
       .then((todoFound) => {
       if (todoFound) {
-        return res.status(403).send({
+        return res.status(409).send({
           status: 'error',
           message: 'A todo with that description exist already',
         });
@@ -98,7 +98,7 @@ module.exports = {
           });
         }
         return res.status(404).send({
-          status: 'success',
+          status: 'error',
           message: 'The todo does not exist',
         });
       });
@@ -144,8 +144,8 @@ module.exports = {
         })
           .then((todos) => {
             if (todos.length === 0) {
-              return res.status(200).send({
-                status: 'success',
+              return res.status(404).send({
+                status: 'error',
                 message: 'No todos',
               });
             }
